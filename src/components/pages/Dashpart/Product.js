@@ -20,10 +20,10 @@ class Product extends Component {
     sort: "ASC",
     by: "id",
     searchName: "",
-    activeCategory: ""
+    activeCategory: "",
   };
 
-  onClickMenu = async e => {
+  onClickMenu = async (e) => {
     await this.setState({ activeCategory: e });
     this.props.history.push(
       `/dash?name=${this.state.searchName}&category=${e}&sort=${this.state.sort}&by=${this.state.by}`
@@ -34,13 +34,13 @@ class Product extends Component {
       activeCategory: e,
       searchName: this.state.searchName,
       sort: this.state.sort,
-      by: this.state.by
+      by: this.state.by,
     };
     this.props.dispatch(getProducts(data));
     this.props.dispatch(getCategories());
   };
 
-  onSort = async e => {
+  onSort = async (e) => {
     await this.setState({ sort: e });
     this.props.history.push(
       `/dash?name=${this.state.searchName}&category=${this.state.activeCategory}&sort=${e}&by=${this.state.by}`
@@ -50,12 +50,12 @@ class Product extends Component {
       activeCategory: this.state.activeCategory,
       searchName: this.state.searchName,
       sort: e,
-      by: this.state.by
+      by: this.state.by,
     };
     this.props.dispatch(getProducts(data));
   };
 
-  onBy = async e => {
+  onBy = async (e) => {
     await this.setState({ by: e });
     this.props.history.push(
       `/dash?name=${this.state.searchName}&category=${this.state.activeCategory}&sort=${this.state.sort}&by=${e}`
@@ -65,12 +65,12 @@ class Product extends Component {
       activeCategory: this.state.activeCategory,
       searchName: this.state.searchName,
       sort: this.state.sort,
-      by: e
+      by: e,
     };
     this.props.dispatch(getProducts(data));
   };
 
-  onChangeSearch = e => {
+  onChangeSearch = (e) => {
     this.setState({ searchName: e.target.value });
     this.props.history.push(
       `/dash/name=${e.target.value}&category=${this.state.activeCategory}&sort=${this.state.sort}&by=${this.state.by}`
@@ -80,12 +80,12 @@ class Product extends Component {
       activeCategory: this.state.activeCategory,
       searchName: e.target.value,
       sort: this.state.sort,
-      by: this.state.by
+      by: this.state.by,
     };
     this.props.dispatch(getProducts(data));
   };
 
-  changePage = async e => {
+  changePage = async (e) => {
     await this.setState({ activePage: e });
     this.props.history.push(
       `/dash/name=${this.state.searchName}&category=${this.state.activeCategory}&sort=${this.state.sort}&by=${this.state.by}&page=${e}`
@@ -95,7 +95,7 @@ class Product extends Component {
       activeCategory: this.state.activeCategory,
       searchName: this.state.searchName,
       sort: this.state.sort,
-      by: this.state.by
+      by: this.state.by,
     };
     this.props.dispatch(getProducts(data));
   };
@@ -109,7 +109,7 @@ class Product extends Component {
         activeCategory: q.category,
         searchName: q.name,
         sort: q.sort,
-        by: q.by
+        by: q.by,
       };
     } else {
       data = {};
@@ -117,15 +117,15 @@ class Product extends Component {
     this.props.dispatch(getProducts(data));
   }
 
-  deleteData = id => {
+  deleteData = (id) => {
     this.setState({
-      id: id
+      id: id,
     });
   };
 
-  editData = data => {
+  editData = (data) => {
     this.setState({
-      data: data
+      data: data,
     });
   };
 
@@ -134,7 +134,7 @@ class Product extends Component {
   }
 
   render() {
-    const PriceParsed = data => {
+    const PriceParsed = (data) => {
       return (
         <span>
           {data.data
@@ -303,12 +303,9 @@ class Product extends Component {
             ))}
           </tbody>
         </table>
-        <nav
-          aria-label="Page navigation example"
-          style={{ position: "fixed", bottom: "7px", width: "75%" }}
-        >
+        <nav aria-label="Page navigation example">
           <ul className="pagination justify-content-center">
-            {this.props.pages.map(page => (
+            {this.props.pages.map((page) => (
               <li
                 className="page-item"
                 key={page}
@@ -330,11 +327,11 @@ class Product extends Component {
   }
 }
 
-const mapProducts = state => {
+const mapProducts = (state) => {
   return {
     products: state.products.products,
     pages: state.products.pages,
-    categories: state.categories.categories
+    categories: state.categories.categories,
   };
 };
 

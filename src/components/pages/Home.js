@@ -120,9 +120,10 @@ class Products extends Component {
   componentDidMount() {
     if (!localStorage.getItem("token")) {
       this.props.history.push("/login");
+    }else{
+      this.getProducts();
+      this.props.dispatch(getCategories());
     }
-    this.getProducts();
-    this.props.dispatch(getCategories());
   }
 
   render() {
