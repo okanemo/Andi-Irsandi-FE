@@ -4,8 +4,9 @@ import "./Home.css";
 import {
   checkout,
   manipulateQuantity,
-  deleteFromCart
+  deleteFromCart,
 } from "../redux/actions/Cart";
+import { getProducts } from "../redux/actions/Product";
 import Navbar from "../layout/Navbar";
 const url = process.env.REACT_APP_URL;
 class Cart extends Component {
@@ -16,22 +17,23 @@ class Cart extends Component {
       tPrice: 0,
       change: 0,
       pay: "-",
-      isDisabled: true
+      isDisabled: true,
     };
   }
   componentDidMount() {
     if (!localStorage.getItem("token")) {
       this.props.history.push("/login");
     }
+    this.props.dispatch(getProducts({}));
   }
-  payment = e => {
+  payment = (e) => {
     this.setState({
-      pay: e.target.value
+      pay: e.target.value,
     });
     if (e.target.value >= this.state.tPrice) {
       this.setState({
         isDisabled: false,
-        change: e.target.value - this.state.tPrice
+        change: e.target.value - this.state.tPrice,
       });
     } else {
       this.setState({ isDisabled: true, change: 0 });
@@ -43,33 +45,33 @@ class Cart extends Component {
       this.props.dispatch(manipulateQuantity(data));
     }
   };
-  addQuantity = data => {
+  addQuantity = (data) => {
     if (data.quantity < data.stock) {
       data.quantity += 1;
       this.props.dispatch(manipulateQuantity(data));
     }
   };
-  reduceQuantity = data => {
+  reduceQuantity = (data) => {
     if (data.quantity > 1) {
       data.quantity -= 1;
       this.props.dispatch(manipulateQuantity(data));
     }
   };
-  deleteFromCart = id => {
+  deleteFromCart = (id) => {
     this.props.dispatch(deleteFromCart(id));
   };
   countTotal = () => {
     var total = 0;
-    this.props.productsInCart.forEach(e => {
+    this.props.productsInCart.forEach((e) => {
       total += e.price * e.quantity;
     });
     this.setState({
-      tPrice: total
+      tPrice: total,
     });
   };
   purchaseHandler = () => {
     const data = {
-      products: this.props.productsInCart
+      products: this.props.productsInCart,
     };
     this.props.dispatch(checkout(data));
     var printcontent = document.getElementById("purchase-detail").innerHTML;
@@ -78,6 +80,15 @@ class Cart extends Component {
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
   };
+
+  componentDidUpdate() {
+    console.log("reject", this.props.reject);
+    if (this.props.reject) {
+      localStorage.clear();
+      this.props.history.push("/login");
+    }
+  }
+
   render() {
     const CheckoutButton = () => {
       if (this.state.isDisabled === true) {
@@ -102,7 +113,7 @@ class Cart extends Component {
         );
       }
     };
-    const PriceParsed = data => {
+    const PriceParsed = (data) => {
       return (
         <span>
           {data.data
@@ -128,7 +139,7 @@ class Cart extends Component {
       } else {
         return (
           <div className="col-6" style={{ paddingBottom: "40px" }}>
-            {this.props.productsInCart.map(cartItem => (
+            {this.props.productsInCart.map((cartItem) => (
               <li
                 className="list-group-item"
                 style={{ padding: "0", border: "none" }}
@@ -142,7 +153,7 @@ class Cart extends Component {
                     style={{
                       width: "64px",
                       height: "60px",
-                      borderRadius: "8px"
+                      borderRadius: "8px",
                     }}
                     src={url + cartItem.image}
                     className="mr-3"
@@ -160,14 +171,16 @@ class Cart extends Component {
                       </button>
 
                       <input
-                        onChange={value => this.changeQuantity(cartItem, value)}
+                        onChange={(value) =>
+                          this.changeQuantity(cartItem, value)
+                        }
                         value={cartItem.quantity}
                         style={{
                           width: 35,
                           textAlign: "center",
                           alignSelf: "center",
                           border: "none",
-                          outline: "none"
+                          outline: "none",
                         }}
                       ></input>
 
@@ -193,7 +206,7 @@ class Cart extends Component {
                           position: "relative",
                           left: "90px",
                           cursor: "pointer",
-                          color: "grey"
+                          color: "grey",
                         }}
                         onClick={() => this.deleteFromCart(cartItem.productId)}
                       >
@@ -272,7 +285,7 @@ class Cart extends Component {
                       style={{
                         border: "none",
                         borderBottom: "1px solid #5bc0de",
-                        outline: "none"
+                        outline: "none",
                       }}
                       onChange={this.payment}
                       value={this.state.pay}
@@ -299,9 +312,10 @@ class Cart extends Component {
   }
 }
 
-const mapCart = state => {
+const mapCart = (state) => {
   return {
-    productsInCart: state.cart.cart
+    productsInCart: state.cart.cart,
+    reject: state.products.reject,
   };
 };
 

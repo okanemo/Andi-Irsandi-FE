@@ -14,10 +14,10 @@ class Products extends Component {
     sort: "ASC",
     by: "id",
     searchName: "",
-    activeCategory: ""
+    activeCategory: "",
   };
 
-  onClickMenu = async e => {
+  onClickMenu = async (e) => {
     await this.setState({ activeCategory: e });
     this.props.history.push(
       `?name=${this.state.searchName}&category=${e}&sort=${this.state.sort}&by=${this.state.by}`
@@ -29,13 +29,13 @@ class Products extends Component {
       searchName: this.state.searchName,
       sort: this.state.sort,
       by: this.state.by,
-      user: "cashier"
+      user: "cashier",
     };
     this.props.dispatch(getProducts(data));
     this.props.dispatch(getCategories());
   };
 
-  onSort = async e => {
+  onSort = async (e) => {
     await this.setState({ sort: e });
     this.props.history.push(
       `?name=${this.state.searchName}&category=${this.state.activeCategory}&sort=${e}&by=${this.state.by}`
@@ -46,12 +46,12 @@ class Products extends Component {
       searchName: this.state.searchName,
       sort: e,
       by: this.state.by,
-      user: "cashier"
+      user: "cashier",
     };
     this.props.dispatch(getProducts(data));
   };
 
-  onBy = async e => {
+  onBy = async (e) => {
     await this.setState({ by: e });
     this.props.history.push(
       `?name=${this.state.searchName}&category=${this.state.activeCategory}&sort=${this.state.sort}&by=${e}`
@@ -62,12 +62,12 @@ class Products extends Component {
       searchName: this.state.searchName,
       sort: this.state.sort,
       by: e,
-      user: "cashier"
+      user: "cashier",
     };
     this.props.dispatch(getProducts(data));
   };
 
-  onChangeSearch = e => {
+  onChangeSearch = (e) => {
     this.setState({ searchName: e.target.value });
     this.props.history.push(
       `?name=${e.target.value}&category=${this.state.activeCategory}&sort=${this.state.sort}&by=${this.state.by}`
@@ -78,12 +78,12 @@ class Products extends Component {
       searchName: e.target.value,
       sort: this.state.sort,
       by: this.state.by,
-      user: "cashier"
+      user: "cashier",
     };
     this.props.dispatch(getProducts(data));
   };
 
-  changePage = async e => {
+  changePage = async (e) => {
     await this.setState({ activePage: e });
     this.props.history.push(
       `?name=${this.state.searchName}&category=${this.state.activeCategory}&sort=${this.state.sort}&by=${this.state.by}&page=${e}`
@@ -94,7 +94,7 @@ class Products extends Component {
       searchName: this.state.searchName,
       sort: this.state.sort,
       by: this.state.by,
-      user: "cashier"
+      user: "cashier",
     };
     this.props.dispatch(getProducts(data));
   };
@@ -109,7 +109,7 @@ class Products extends Component {
         searchName: q.name,
         sort: q.sort,
         by: q.by,
-        user: "cashier"
+        user: "cashier",
       };
     } else {
       data = { user: "cashier" };
@@ -120,9 +120,17 @@ class Products extends Component {
   componentDidMount() {
     if (!localStorage.getItem("token")) {
       this.props.history.push("/login");
-    }else{
+    } else {
       this.getProducts();
       this.props.dispatch(getCategories());
+    }
+  }
+
+  componentDidUpdate() {
+    console.log("reject", this.props.reject);
+    if (this.props.reject) {
+      localStorage.clear();
+      this.props.history.push("/login");
     }
   }
 
@@ -233,13 +241,13 @@ class Products extends Component {
           </ul>
 
           <div className="row products">
-            {this.props.products.map(product => (
+            {this.props.products.map((product) => (
               <CardProduct product={product} key={product.id} />
             ))}
           </div>
           <nav aria-label="Page navigation">
             <ul className="pagination justify-content-center">
-              {this.props.pages.map(page => (
+              {this.props.pages.map((page) => (
                 <li
                   className="page-item"
                   key={page}
@@ -259,11 +267,12 @@ class Products extends Component {
   }
 }
 
-const mapProducts = state => {
+const mapProducts = (state) => {
   return {
     products: state.products.products,
+    reject: state.products.reject,
     pages: state.products.pages,
-    categories: state.categories.categories
+    categories: state.categories.categories,
   };
 };
 

@@ -1,73 +1,83 @@
 const initialState = {
   products: [],
-  pages: []
+  pages: [],
+  reject: false,
 };
 
 const Product = (state = initialState, action) => {
   switch (action.type) {
     case "GET_PRODUCT_PENDING":
       return {
-        ...state
+        ...state,
       };
     case "GET_PRODUCT_REJECTED":
       return {
-        ...state
+        ...state,
+        reject: true,
       };
     case "GET_PRODUCT_FULFILLED":
-      return {
-        ...state,
-        products: action.payload.data.result,
-        pages: action.payload.data.totalPages
-      };
+      if (action.payload.data.error_message) {
+        return {
+          ...state,
+          reject: true,
+        };
+      } else {
+        return {
+          ...state,
+          reject: false,
+          products: action.payload.data.result,
+          pages: action.payload.data.totalPages,
+        };
+      }
 
     case "POST_PRODUCT_PENDING":
       return {
-        ...state
+        ...state,
       };
 
     case "POST_PRODUCT_REJECTED":
       return {
-        ...state
+        ...state,
       };
 
     case "POST_PRODUCT_FULFILLED":
       const newDataProducts = [
         ...state.products,
-        action.payload.data.result[0]
+        action.payload.data.result[0],
       ];
       return {
         ...state,
-        products: newDataProducts
+        products: newDataProducts,
       };
     case "DELETE_PRODUCT_PENDING":
       return {
-        ...state
+        ...state,
       };
 
     case "DELETE_PRODUCT_REJECTED":
       return {
-        ...state
+        ...state,
       };
     case "DELETE_PRODUCT_FULFILLED":
       const newProductAfterDelete = state.products.filter(
-        product => product.id !== parseInt(action.payload.data.result)
+        (product) => product.id !== parseInt(action.payload.data.result)
       );
       return {
         ...state,
-        products: newProductAfterDelete
+        products: newProductAfterDelete,
       };
     case "UPDATE_PRODUCT_PENDING":
       return {
-        ...state
+        ...state,
       };
 
     case "UPDATE_PRODUCT_REJECTED":
       return {
-        ...state
+        ...state,
       };
 
     case "UPDATE_PRODUCT_FULFILLED":
-      const newProductAfterUpdate = state.products.map(product => {
+      const newProductAfterUpdate = state.products.map((product) => {
         if (product.id === action.payload.data.result.id) {
           return action.payload.data.result;
         }
@@ -75,7 +85,7 @@ const Product = (state = initialState, action) => {
       });
       return {
         ...state,
-        products: newProductAfterUpdate
+        products: newProductAfterUpdate,
       };
     default:
       return state;

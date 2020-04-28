@@ -11,36 +11,27 @@ class Signup extends Component {
       name: "",
       email: "",
       password: "",
-      password2: ""
+      password2: "",
     };
   }
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
     if (this.state.password !== this.state.password2)
       return alert("Check your password/retype password");
     axios
       .post(url + "user/register/", this.state)
-      .then(res => {
+      .then((res) => {
         this.props.history.push("/dash");
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   };
-
-  componentDidMount() {
-    if (
-      localStorage.getItem("status") !== "admin" &&
-      localStorage.getItem("status") !== "super_admin"
-    ) {
-      this.props.history.push("/");
-    }
-  }
 
   render() {
     return (

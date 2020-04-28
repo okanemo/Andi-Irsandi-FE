@@ -9,22 +9,22 @@ import Edituser from "../../modals/Edituser";
 class User extends Component {
   state = {
     id: "",
-    data: []
+    data: [],
   };
 
   getUsers() {
     this.props.dispatch(getUsers());
   }
 
-  deleteData = id => {
+  deleteData = (id) => {
     this.setState({
-      id: id
+      id: id,
     });
   };
 
-  editData = data => {
+  editData = (data) => {
     this.setState({
-      data: data
+      data: data,
     });
   };
 
@@ -33,9 +33,9 @@ class User extends Component {
   }
 
   render() {
-    const Buttondelete = user => {
+    const Buttondelete = (user) => {
       if (localStorage.getItem("status") === "admin") {
-        if (user.user.status === "cashier") {
+        if (user.user.status === "cashier" || user.user.status === "waiting") {
           return (
             <span>
               <button
@@ -159,7 +159,7 @@ class User extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.users.map(user => (
+            {this.props.users.map((user) => (
               <tr key={user.id}>
                 <th scope="row">{user.id}</th>
                 <td>{user.name}</td>
@@ -178,9 +178,9 @@ class User extends Component {
   }
 }
 
-const mapUsers = state => {
+const mapUsers = (state) => {
   return {
-    users: state.users.users
+    users: state.users.users,
   };
 };
 

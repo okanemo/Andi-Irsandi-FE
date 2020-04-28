@@ -133,6 +133,14 @@ class Product extends Component {
     this.getProducts();
   }
 
+  componentDidUpdate() {
+    console.log("reject", this.props.reject);
+    if (this.props.reject) {
+      localStorage.clear();
+      this.props.history.push("/login");
+    }
+  }
+
   render() {
     const PriceParsed = (data) => {
       return (
@@ -332,6 +340,7 @@ const mapProducts = (state) => {
     products: state.products.products,
     pages: state.products.pages,
     categories: state.categories.categories,
+    reject: state.products.reject,
   };
 };
 

@@ -5,6 +5,8 @@ import Product from "./Dashpart/Product";
 import User from "./Dashpart/User";
 import History from "./Dashpart/History";
 import Navbar from "../layout/Navbar";
+import { connect } from "react-redux";
+import { getProducts } from "../redux/actions/Product";
 
 class Dashboard extends Component {
   state = {
@@ -18,17 +20,17 @@ class Dashboard extends Component {
     productNav: "btn btn-outline-info active",
     categoryNav: "btn btn-outline-info",
     userNav: "btn btn-outline-info",
-    historyNav: "btn btn-outline-info"
+    historyNav: "btn btn-outline-info",
   };
 
-  signUp = e => {
+  signUp = (e) => {
     e.preventDefault();
     if (this.state.dataTarget === "signup") {
       this.props.history.push("/signup");
     }
   };
 
-  activatedCategory = event => {
+  activatedCategory = (event) => {
     this.setState({
       categoryHidden: false,
       productHidden: true,
@@ -40,11 +42,11 @@ class Dashboard extends Component {
       categoryNav: "btn btn-outline-info active",
       productNav: "btn btn-outline-info",
       userNav: "btn btn-outline-info",
-      historyNav: "btn btn-outline-info"
+      historyNav: "btn btn-outline-info",
     });
   };
 
-  activatedProduct = event => {
+  activatedProduct = (event) => {
     this.setState({
       categoryHidden: true,
       userHidden: true,
@@ -56,11 +58,11 @@ class Dashboard extends Component {
       categoryNav: "btn btn-outline-info",
       userNav: "btn btn-outline-info",
       historyNav: "btn btn-outline-info",
-      productNav: "btn btn-outline-info active"
+      productNav: "btn btn-outline-info active",
     });
   };
 
-  activatedUser = event => {
+  activatedUser = (event) => {
     this.setState({
       categoryHidden: true,
       userHidden: false,
@@ -72,11 +74,11 @@ class Dashboard extends Component {
       categoryNav: "btn btn-outline-info",
       userNav: "btn btn-outline-info active",
       productNav: "btn btn-outline-info",
-      historyNav: "btn btn-outline-info"
+      historyNav: "btn btn-outline-info",
     });
   };
 
-  activatedHistory = event => {
+  activatedHistory = (event) => {
     this.setState({
       categoryHidden: true,
       userHidden: true,
@@ -88,7 +90,7 @@ class Dashboard extends Component {
       categoryNav: "btn btn-outline-info",
       userNav: "btn btn-outline-info",
       productNav: "btn btn-outline-info",
-      historyNav: "btn btn-outline-info active"
+      historyNav: "btn btn-outline-info active",
     });
   };
 
@@ -100,6 +102,7 @@ class Dashboard extends Component {
       alert("You`re not authorized as administrator");
       this.props.history.push("/");
     }
+    this.props.dispatch(getProducts({}));
   }
 
   render() {
@@ -173,4 +176,10 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+const getReject = (state) => {
+  return {
+    reject: state.products.reject,
+  };
+};
+
+export default connect(getReject)(Dashboard);

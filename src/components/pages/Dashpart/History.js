@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "../Home.css";
 import { connect } from "react-redux";
 import { getHistory } from "../../redux/actions/History";
+import { getProducts } from "../../redux/actions/Product";
 import Purchasedetail from "../../modals/Purchasedetail";
 import Chart from "chart.js";
 import axios from "axios";
@@ -9,9 +10,9 @@ const url = process.env.REACT_APP_URL;
 class History extends Component {
   state = {
     id: 0,
-    data: []
+    data: [],
   };
-  getdetail = idPurchase => {
+  getdetail = (idPurchase) => {
     this.setState({ id: idPurchase });
   };
   getHistory() {
@@ -19,18 +20,19 @@ class History extends Component {
   }
   componentDidMount() {
     this.getHistory();
+    this.props.dispatch(getProducts({}));
     axios
       .get(url + "lastweek", {
         headers: {
           token: localStorage.getItem("token"),
-          "user-id": localStorage.getItem("user-id")
-        }
+          "user-id": localStorage.getItem("user-id"),
+        },
       })
-      .then(res => {
+      .then((res) => {
         var x = [];
         var y = [];
         var i = 0;
-        res.data.result.forEach(e => {
+        res.data.result.forEach((e) => {
           x[i] = e.date_added.toString().substr(0, 10);
           y[i] = e.totalPayment;
           i++;
@@ -51,17 +53,25 @@ class History extends Component {
                   "rgba(153, 102, 255, 0.6)",
                   "rgba(255, 159, 64, 0.6)",
                   "rgba(255, 99, 132, 0.6)",
-                  "rgba(54, 162, 235, 0.6)"
-                ]
-              }
-            ]
-          }
+                  "rgba(54, 162, 235, 0.6)",
+                ],
+              },
+            ],
+          },
         });
       });
   }
 
+  componentDidUpdate() {
+    console.log("reject", this.props.reject);
+    if (this.props.reject) {
+      localStorage.clear();
+      this.props.history.push("/login");
+    }
+  }
+
   render() {
-    const PriceParsed = data => {
+    const PriceParsed = (data) => {
       return (
         <span>
           {data.data
@@ -151,9 +161,10 @@ class History extends Component {
   }
 }
 
-const mapHistories = state => {
+const mapHistories = (state) => {
   return {
-    histories: state.histories.histories
+    histories: state.histories.histories,
+    reject: state.products.reject,
   };
 };
 

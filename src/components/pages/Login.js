@@ -10,7 +10,7 @@ class Login extends Component {
       email: "",
       password: "",
       alertHidden: true,
-      error: ""
+      error: "",
     };
   }
 
@@ -20,29 +20,37 @@ class Login extends Component {
     }
   }
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
 
     axios
       .post(url + "user/login/", this.state)
-      .then(res => {
-        console.log(res.data.error);
+      .then((res) => {
         if (res.data.error === "Wrong Email") {
           return this.setState({
             alertHidden: false,
-            error: "Email is not registered"
+            error: "Email is not registered",
           });
         }
+        if (res.data.result.status === "waiting") {
+          return this.setState({
+            alertHidden: false,
+            error: "Waiting Approval",
+          });
+        }
+
         localStorage.setItem("token", res.data.result.token);
         localStorage.setItem("user-id", res.data.result.id);
         localStorage.setItem("status", res.data.result.status);
-        this.props.history.push("/");
+        if (res.data.result.status === "admin") {
+          this.props.history.push("/dash");
+        } else this.props.history.push("/");
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         this.setState({ alertHidden: false, error: "Wrong Password" });
       });
